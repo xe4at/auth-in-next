@@ -2,15 +2,16 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <>
-      <div>
-        <button>
-          <Link href="/singup">Singup</Link>
-        </button>
-        <button>
-          <Link href="/singin">Singin</Link>
-        </button>
+    <div className="home-container">
+      <h1 className="home-title">Welcome to Our App</h1>
+      <div className="home-buttons">
+        <Link href="/singup" className="home-button">
+          Create Account
+        </Link>
+        <Link href="/singin" className="home-button">
+          Sign In
+        </Link>
       </div>
-    </>
+    </div>
   );
 }

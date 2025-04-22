@@ -14,7 +14,7 @@ function SingUp() {
       headers: { "Content-Type": "application/json" },
     });
     const data = await res.json();
-    if (data.status === "success") router.push("/singin")
+    if (data.status === "success") router.push("/singin");
   };
 
   return (

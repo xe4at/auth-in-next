@@ -2,6 +2,7 @@ import { sign } from "jsonwebtoken";
 import User from "../../../../models/User";
 import { verifyPassword } from "../../../../utils/auth";
 import connectDB from "../../../../utils/connectDb";
+import { serialize } from "cookie";
 
 async function handler(req, res) {
   if (req.method !== "POST") {
@@ -49,7 +50,20 @@ async function handler(req, res) {
     expiresIn: expiresIn,
   });
 
-  res.status(200).json({});
+  const serializedCookie = serialize("token", token, {
+    httpOnly: true,
+    maxAge: expiresIn,
+    path: "/",
+  });
+
+  res
+    .status(200)
+    .setHeader("Set-Cookie", serializedCookie)
+    .json({
+      status: "success",
+      message: "Logged in!",
+      data: { email: user.email },
+    });
 }
 
 export default handler;

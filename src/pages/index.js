@@ -7,6 +7,9 @@ export default function Home() {
         <button>
           <Link href="/singup">Singup</Link>
         </button>
+        <button>
+          <Link href="/singin">Singin</Link>
+        </button>
       </div>
     </>
   );

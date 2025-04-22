@@ -6,10 +6,10 @@ export default function Home() {
       <h1 className="home-title">Welcome to Our App</h1>
       <div className="home-buttons">
         <Link href="/singup" className="home-button">
-          Create Account
+          <span>Create Account</span>
         </Link>
         <Link href="/singin" className="home-button">
-          Sign In
+          <span>Sign In</span>
         </Link>
       </div>
     </div>

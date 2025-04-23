@@ -5,6 +5,9 @@ export default function Home() {
     <div className="home-container">
       <h1 className="home-title">Welcome to Our App</h1>
       <div className="home-buttons">
+        <Link href="/dashboard" className="home-button">
+          <span>Dashboard</span>
+        </Link>
         <Link href="/singup" className="home-button">
           <span>Create Account</span>
         </Link>

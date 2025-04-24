@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function SingUp() {
   const [email, setEmail] = useState("");
@@ -8,6 +8,15 @@ function SingUp() {
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
+
+    useEffect(() => {
+      fetch("/api/user")
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.status === "success") router.replace("/dashboard");
+        });
+    }, []);
+  
 
   const singupHandler = async () => {
     try {

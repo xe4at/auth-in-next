@@ -2,26 +2,42 @@ import { verifyToken } from "../../../utils/auth";
 
 async function handler(req, res) {
   if (req.method !== "GET") {
-    return;
+    res.setHeader("Allow", ["GET"]);
+    return res.status(405).json({
+      status: "failed",
+      message: "Method not allowed",
+    });
   }
 
-  const secretKey = process.env.SECRET_KEY;
+  try {
+    const secretKey = process.env.SECRET_KEY;
 
-  const { token } = req.cookies;
+    if (!secretKey) {
+      throw new Error("Server configuration error");
+    }
 
-  if (!token) {
-    return res
-      .status(401)
-      .json({ status: "failed", message: "You are not logged in!" });
-  }
-  const result = verifyToken(token, secretKey);
+    const { token } = req.cookies;
 
-  if (result) {
-    res.status(200).json({ status: "succerss", data: result });
-  } else {
+    if (!token) {
+      return res
+        .status(401)
+        .json({ status: "failed", message: "You are not logged in!" });
+    }
+
+    const result = verifyToken(token, secretKey);
+
+    if (result) {
+      res.status(200).json({ status: "success", data: result });
+    } else {
+      res
+        .status(401)
+        .json({ status: "failed", message: "You are unauthorized" });
+    }
+  } catch (error) {
+    console.error("Token verification error:", error);
     res
-      .status(401)
-      .json({ status: "failed", message: "You are unauthorized" });
+      .status(500)
+      .json({ status: "failed", message: "Internal server error" });
   }
 }
 

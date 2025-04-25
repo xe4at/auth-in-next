@@ -1,6 +1,7 @@
 import User from "../../../models/User";
 import { verifyPassword, verifyToken } from "../../../utils/auth";
 import connectDB from "../../../utils/connectDb";
+import { serialize } from "cookie";
 
 async function handler(req, res) {
   if (req.method !== "POST") return;
@@ -51,10 +52,24 @@ async function handler(req, res) {
   user.name = name;
   user.lastName = lastName;
 
-  user.save();
+  await user.save();
 
-  return res
+  // Set cookies for name and last name
+  const nameCookie = serialize("userName", name, {
+    httpOnly: true,
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    path: "/",
+  });
+
+  const lastNameCookie = serialize("userLastName", lastName, {
+    httpOnly: true,
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    path: "/",
+  });
+
+  res
     .status(200)
+    .setHeader("Set-Cookie", [nameCookie, lastNameCookie])
     .json({ status: "success", data: { name, lastName, email: user.email } });
 }
 

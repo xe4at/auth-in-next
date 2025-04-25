@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 export default function Home() {
+  const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -15,8 +17,11 @@ export default function Home() {
   const signOutHandler = async () => {
     const res = await fetch("/api/auth/singout");
     const data = await res.json();
-    if (data.status == "success") setIsLoggedIn(true);
+    if (data.status == "success") {
+      router.reload();
+    }
   };
+
   return (
     <div className="home-container">
       <h1 className="home-title">Welcome to Our App</h1>
@@ -27,8 +32,8 @@ export default function Home() {
             <Link href="/dashboard" className="home-button">
               <span>Dashboard</span>
             </Link>
-            <button onClick={signOutHandler} className="home-button">
-              Sign Out
+            <button onClick={signOutHandler} className="home-button signout">
+              <span>Sign Out</span>
             </button>
           </>
         ) : null}

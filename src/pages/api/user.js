@@ -16,7 +16,7 @@ async function handler(req, res) {
       throw new Error("Server configuration error");
     }
 
-    const { token } = req.cookies;
+    const { token, userName, userLastName } = req.cookies;
 
     if (!token) {
       return res
@@ -27,7 +27,14 @@ async function handler(req, res) {
     const result = verifyToken(token, secretKey);
 
     if (result) {
-      res.status(200).json({ status: "success", data: result });
+      res.status(200).json({
+        status: "success",
+        data: {
+          ...result,
+          name: userName || "",
+          lastName: userLastName || "",
+        },
+      });
     } else {
       res
         .status(401)

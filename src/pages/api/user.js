@@ -1,4 +1,6 @@
 import { verifyToken } from "../../../utils/auth";
+import User from "../../../models/User";
+import connectDB from "../../../utils/connectDb";
 
 async function handler(req, res) {
   if (req.method !== "GET") {
@@ -10,13 +12,14 @@ async function handler(req, res) {
   }
 
   try {
+    await connectDB();
     const secretKey = process.env.SECRET_KEY;
 
     if (!secretKey) {
       throw new Error("Server configuration error");
     }
 
-    const { token, userName, userLastName } = req.cookies;
+    const { token } = req.cookies;
 
     if (!token) {
       return res
@@ -27,12 +30,21 @@ async function handler(req, res) {
     const result = verifyToken(token, secretKey);
 
     if (result) {
+      // Fetch user data from database
+      const user = await User.findOne({ email: result.email });
+
+      if (!user) {
+        return res
+          .status(404)
+          .json({ status: "failed", message: "User not found" });
+      }
+
       res.status(200).json({
         status: "success",
         data: {
-          ...result,
-          name: userName || "",
-          lastName: userLastName || "",
+          email: user.email,
+          name: user.name || "",
+          lastName: user.lastName || "",
         },
       });
     } else {

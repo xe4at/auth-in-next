@@ -1,4 +1,3 @@
-import { redirect } from "next/dist/server/api-utils";
 import { verifyToken } from "../../utils/auth";
 
 function Dashboard() {
@@ -15,7 +14,7 @@ export async function getServerSideProps(context) {
 
   if (!result)
     return {
-      redirect: { destination: "/signin", permanent: false },
+      redirect: { destination: "/singin", permanent: false },
     };
 
   return { props: {} };
